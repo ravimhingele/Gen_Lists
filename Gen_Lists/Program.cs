@@ -10,12 +10,17 @@ namespace Gen_Lists
     {
         static void Main(string[] args)
         {
-
-            List<T> list = new List<T>;
-            list.AddAfter("s");
-            list.AddAfter("a");
-            List.AddAfter("b");
-
+            
+            List<string> list = new List<string>();
+            list.AddLast("s");
+            list.AddLast("a");
+            list.AddLast("c");
+            list.AddLast("b");
+            PriorityComparer<string> comparer = new PriorityComparer<string>();
+            list.Sort(comparer);
+            Console.WriteLine(list);
+            Console.ReadKey();
+            
             
             //TestInterface();
 

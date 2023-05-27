@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Gen_Lists
 {
-    internal class List_Item<T>
+    internal class List_Item<T> where T : IComparable
     {
         public T Value;
         public List_Item<T> Next = null;

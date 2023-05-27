@@ -245,12 +245,18 @@ namespace Gen_Lists
                 Tail = Tail.Previous;
                 Tail.Next = null;
                 item.Previous = null;
+                result = true;
+                count--;
+                return result;
             }
             if (item.Previous == null)
             {
                 Head = Head.Next;
                 Head.Previous = null;
                 item.Next = null;
+                result = true;
+                count--;
+                return result;
             }
             while (temp.Next != null)
             {
@@ -267,7 +273,7 @@ namespace Gen_Lists
             }
             if (temp.Equals(item))
             {
-                temp.Previous.Next = null;
+                temp.Previous.Next = temp.Next;
                 temp.List = null;
                 count--;
                 result = true;
@@ -311,7 +317,7 @@ namespace Gen_Lists
         public void CopyTo(T[] s, int index)
         {
             List_Item<T> item = Head;
-            for (int i = index; i < s.Length; i++)
+            for (int i = index; i < s.Length - 1; i++)
             {
                 s[i] = item.Value;
                 item = item.Next;
@@ -326,11 +332,20 @@ namespace Gen_Lists
 
         private void InsertBefore(List_Item<T> node, List_Item<T> newNode)
         {
-            newNode.Next = node;
-            newNode.Previous = node.Previous;
-            node.Previous.Next = newNode;
-            node.Previous = newNode;
-            count++;
+            if (node == null)
+            {
+                newNode.Next = null;
+                newNode.Previous = Tail;
+                count++;
+            }
+            else
+            {
+                newNode.Next = node;
+                newNode.Previous = node.Previous;
+                node.Previous.Next = newNode;
+                node.Previous = newNode;
+                count++;
+            }
         }
 
 
@@ -385,27 +400,27 @@ namespace Gen_Lists
             return Remove(item);
         }
 
-
-
-
-        public List<T> Sort(Comparer comparer)
+        public void Sort(IComparer<T> comparator)
         {
-            T[] arr = new T[Count()];
-            this.CopyTo(arr, 0);
+            List_Item<T> temp1 = Head;
+            List_Item<T> temp2;
             for (int i = 0; i < count; i++)
             {
-                if (comparer.Compare(arr[i], arr[i + 1]) == 1)
+                if (i > 0) { temp1 = temp1.Next; } // пропуск первого элемента
+                temp2 = temp1;
+                for (int j = i; j > 0; j--)
                 {
-
+                    if (j < i) { temp2 = temp2.Previous; }
+                    if (comparator.Compare(temp2.Value, temp2.Previous.Value) < 0)
+                    {
+                        T tempValue = temp2.Value;
+                        temp2.Value = temp2.Previous.Value;
+                        temp2.Previous.Value = tempValue;
+                    }
                 }
             }
-
-
-
-            
-            //Array.Sort(arr);
-            List<T> list = new List<T>(arr);
-            return list;
         }
+
+        
     }
 }
